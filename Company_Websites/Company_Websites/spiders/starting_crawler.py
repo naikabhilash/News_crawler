@@ -48,6 +48,7 @@ from scrapy.utils.log import configure_logging
 #from Company_websites_01.Version02.Company_Websites.Company_Websites.spiders.itc_limited_news import ItcLimitedNewsSpider_Two
 from Company_Websites.Company_Websites.spiders.larsentoubro import Larsentoubro
 from Company_Websites.Company_Websites.spiders.tcs_news_extract import TcsNewsExtractSpider
+from Company_Websites.Company_Websites.spiders.tatamotors_article import TatamotorsArticleSpider
 
 # # from web_crawler.spiders.spider1 import Spider1
 # # from web_crawler.spiders.spider2 import Spider2
@@ -70,6 +71,7 @@ def crawl():
     #yield runner.crawl(ItcLimitedNewsSpider_Two)
     yield runner.crawl(Larsentoubro)
     yield runner.crawl(TcsNewsExtractSpider)
+    yield runner.crawl(TatamotorsArticleSpider)
 
     reactor.stop()
 
