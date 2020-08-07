@@ -9,8 +9,8 @@
 
 BOT_NAME = 'Company_Websites'
 
-SPIDER_MODULES = ['Company_Websites.spiders']
-NEWSPIDER_MODULE = 'Company_Websites.spiders'
+SPIDER_MODULES = ['Company_Websites.Company_Websites.spiders']
+NEWSPIDER_MODULE = 'Company_Websites.Company_Websites.spiders'
 
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent

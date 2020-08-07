@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 import scrapy
 import json
+from ..items import CompanyWebsitesItem
+from scrapy.loader import  ItemLoader
 
 class TcsNewsExtractSpider(scrapy.Spider):
     name = 'tcs_news_extract'
@@ -13,7 +15,7 @@ class TcsNewsExtractSpider(scrapy.Spider):
         for url in urls:
             yield scrapy.Request(url=url, callback=self.parse)
     
-    def parse(self,response):
+    def parse(self, response, **kwargs):
         data = json.loads(response.body)
         links = data.get('search_result').get('commonSearchResultList')
         for link in links:
@@ -29,9 +31,11 @@ class TcsNewsExtractSpider(scrapy.Spider):
         for i in range(0,len(sel_list)):
             text = sel_list[i].get()
             self.string += text + " "
-        data ={}
-        data['links'] = self.link_p
-        data['text'] = self.string
-        data['publish_date'] = self.date_p
-        yield data
+
+        loader = ItemLoader(item=CompanyWebsitesItem())
+        loader.add_value('links',self.link_p)
+        loader.add_value('text',self.string)
+        loader.add_value('publish_date',self.date_p)
+        loader.add_value('company','TCS')
+        yield loader.load_item()
         
