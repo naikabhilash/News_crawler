@@ -1,5 +1,7 @@
-# -*- coding: utf-8 -*-
+    # -*- coding: utf-8 -*-
 import scrapy
+from ..items import CompanyWebsitesItem
+from scrapy.loader import  ItemLoader
 
 class MahindraMahindraNewsSpider(scrapy.Spider):
     name = 'mahindra_mahindra_news'
@@ -25,6 +27,7 @@ class MahindraMahindraNewsSpider(scrapy.Spider):
             links = link.xpath(' .//h4/a/@href').get()
             dates = link.xpath('./p[@class="date"]/text()').get()
             yield response.follow(url=links, callback=self.parse_article, meta={'links': links, 'dates': dates})
+        self.logger.info('get article url - Mahindra')
 
     def parse_article(self, response):
         self.link_p = response.request.meta.get('links')
@@ -34,9 +37,11 @@ class MahindraMahindraNewsSpider(scrapy.Spider):
         for i in range(0,len(sel_list)):
             text = sel_list[i].get()
             self.string += text + " "
-        yield {
-        'links' : response.urljoin(self.link_p),
-        'text' : self.string,
-        'publish_date' : self.date_p
-        }
+
+        loader = ItemLoader(item=CompanyWebsitesItem())
+        loader.add_value('links', response.urljoin(self.link_p))
+        loader.add_value('text', self.string)
+        loader.add_value('publish_date', self.date_p)
+        loader.add_value('company', 'Mahindra')
+        yield loader.load_item()
 

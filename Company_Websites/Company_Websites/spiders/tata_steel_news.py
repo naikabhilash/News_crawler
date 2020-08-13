@@ -1,5 +1,8 @@
 # -*- coding: utf-8 -*-
 import scrapy
+from ..items import CompanyWebsitesItem
+from scrapy.loader import  ItemLoader
+
 
 class TataSteelNewsSpider(scrapy.Spider):
     name = 'tata_steel_news'
@@ -16,7 +19,8 @@ class TataSteelNewsSpider(scrapy.Spider):
             links = sel_list[i].xpath('./@href').get()
             date = sel_list[i].xpath('./span[@class="date-day"]/span[2]/text()').get()
             yield response.follow(url=links, callback=self.parse_article, meta={'links':links, 'date':date})
-    
+            self.logger.info('get article url - Tata_Steel')
+
     def parse_article(self, response):
         self.link_p = response.request.meta.get('links')
         self.date_p = response.request.meta.get('date')
@@ -25,8 +29,10 @@ class TataSteelNewsSpider(scrapy.Spider):
         for i in range(0,len(sel_list)):
             text = sel_list[i].get()
             self.string += text + " "
-        yield {
-        'links': response.urljoin(self.link_p),
-        'text' : self.string,
-        'publish_date' : self.date_p
-        }
+
+        loader = ItemLoader(item=CompanyWebsitesItem())
+        loader.add_value('links', response.urljoin(self.link_p))
+        loader.add_value('text', self.string.strip())
+        loader.add_value('publish_date', self.date_p)
+        loader.add_value('company', 'Maruti_Suzuki')
+        yield loader.load_item()

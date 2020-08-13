@@ -41,22 +41,26 @@ from scrapy.utils.log import configure_logging
 
 # #
 # # #spiders
-#from Company_websites_01.Version02.Company_Websites.Company_Websites.spiders.company_websites_spider import AshokLeyland
-#from Company_websites_01.Version02.Company_Websites.Company_Websites.spiders.company_websites_spider import AshokLeyland_Two
-#from Company_websites_01.Version02.Company_Websites.Company_Websites.spiders.adani_news_extract import AdaniNewsExtractSpider
-#from Company_websites_01.Version02.Company_Websites.Company_Websites.spiders.itc_limited_news import ItcLimitedNewsSpider
-#from Company_websites_01.Version02.Company_Websites.Company_Websites.spiders.itc_limited_news import ItcLimitedNewsSpider_Two
+from Company_Websites.Company_Websites.spiders.company_websites_spider import AshokLeyland
+#No need to use AshokLeyland_Two as the output is without any date
+#from Company_Websites.Company_Websites.spiders.company_websites_spider import AshokLeyland_Two
+from Company_Websites.Company_Websites.spiders.adani_news_extract import AdaniNewsExtractSpider
+from Company_Websites.Company_Websites.spiders.itc_limited_news import ItcLimitedNewsSpider
+from Company_Websites.Company_Websites.spiders.itc_limited_news import ItcLimitedNewsSpider_Two
 from Company_Websites.Company_Websites.spiders.larsentoubro import Larsentoubro
 from Company_Websites.Company_Websites.spiders.tcs_news_extract import TcsNewsExtractSpider
 from Company_Websites.Company_Websites.spiders.tatamotors_article import TatamotorsArticleSpider
+from Company_Websites.Company_Websites.spiders.mahindra_mahindra_news import MahindraMahindraNewsSpider
+from Company_Websites.Company_Websites.spiders.maruti_suzuki_news import MarutiSuzukiNewsSpider
+from Company_Websites.Company_Websites.spiders.hcl_tech_news import HclTechNewsSpider
+from Company_Websites.Company_Websites.spiders.infosys_news import InfosysNewsSpider
+from Company_Websites.Company_Websites.spiders.tata_steel_news import TataSteelNewsSpider
+from Company_Websites.Company_Websites.spiders.tata_power_news import TataPowerNewsSpider
 
-# # from web_crawler.spiders.spider1 import Spider1
-# # from web_crawler.spiders.spider2 import Spider2
-# #
+
+
 configure_logging()
-# settings_file_path = 'scraper.scraper.settings' # The path seen from root, ie. from main.py
-# os.environ.setdefault('SCRAPY_SETTINGS_MODULE', 'D:\SAP\Codes\Codes\Version02\Company_Websites\Company_Websites')
-#settings = get_project_settings()
+
 settings= Settings()
 settings.set('FEED_FORMAT', 'csv')
 settings.set('FEED_URI', 'results.csv')
@@ -64,14 +68,20 @@ runner = CrawlerRunner(settings)
 #
 @defer.inlineCallbacks
 def crawl():
-    #yield runner.crawl(AshokLeyland)
+    yield runner.crawl(AshokLeyland)
     #yield runner.crawl(AshokLeyland_Two)
-    #yield runner.crawl(AdaniNewsExtractSpider)
-    #yield runner.crawl(ItcLimitedNewsSpider)
-    #yield runner.crawl(ItcLimitedNewsSpider_Two)
+    yield runner.crawl(AdaniNewsExtractSpider)
+    yield runner.crawl(ItcLimitedNewsSpider)
+    yield runner.crawl(ItcLimitedNewsSpider_Two)
     yield runner.crawl(Larsentoubro)
     yield runner.crawl(TcsNewsExtractSpider)
     yield runner.crawl(TatamotorsArticleSpider)
+    yield runner.crawl(MahindraMahindraNewsSpider)
+    yield runner.crawl(MarutiSuzukiNewsSpider)
+    yield runner.crawl(HclTechNewsSpider)
+    yield runner.crawl(InfosysNewsSpider)
+    yield runner.crawl(TataSteelNewsSpider)
+    yield runner.crawl(TataPowerNewsSpider)
 
     reactor.stop()
 

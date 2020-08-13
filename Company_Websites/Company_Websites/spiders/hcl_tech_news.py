@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 import scrapy
+from ..items import CompanyWebsitesItem
+from scrapy.loader import  ItemLoader
 
 class HclTechNewsSpider(scrapy.Spider):
     name = 'hcl_tech_news'
@@ -22,9 +24,11 @@ class HclTechNewsSpider(scrapy.Spider):
             text = sel_list[i].get()
             self.string += text + " "
         publish_date = response.xpath('(//div[@class="news-published-date"]//text())[3]').get()
-        yield {
-        'links' : response.urljoin(self.link_p),
-        'text' : self.string,
-        'publish_date' : publish_date
-        }
+
+        loader = ItemLoader(item=CompanyWebsitesItem())
+        loader.add_value('links', response.urljoin(self.link_p))
+        loader.add_value('text', self.string.strip())
+        loader.add_value('publish_date', publish_date)
+        loader.add_value('company', 'HCL_Tech')
+        yield loader.load_item()
 

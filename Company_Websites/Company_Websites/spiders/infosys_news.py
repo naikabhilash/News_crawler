@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 import scrapy
+from ..items import CompanyWebsitesItem
+from scrapy.loader import  ItemLoader
 
 class InfosysNewsSpider(scrapy.Spider):
     name = 'infosys_news'
@@ -15,7 +17,8 @@ class InfosysNewsSpider(scrapy.Spider):
             links = sel_list.xpath('.//h3/a/@href')[i].get()
             date = sel_list.xpath('//li[@class="lct-txt press-release-date"]/text()')[i].get()
             yield response.follow(url=links, callback=self.parse_article, meta={'links':links, 'date':date})
-        
+            self.logger.info('get article url - Infosys')
+
     def parse_article(self, response):
         self.date_p = response.request.meta.get('date')
         self.link_p = response.request.meta.get('links')
@@ -27,9 +30,11 @@ class InfosysNewsSpider(scrapy.Spider):
         # publish_date = response.xpath('//p[@class="location-date"]/text()').get()
         # if publish_date is None:
         #     publish_date = response.xpath('//p/strong/text()').get()
-        yield {
-        'links' : response.urljoin(self.link_p),
-        'text' : self.string,
-        'publish_date' : self.date_p
-        }
+
+        loader = ItemLoader(item=CompanyWebsitesItem())
+        loader.add_value('links', response.urljoin(self.link_p))
+        loader.add_value('text', self.string.strip())
+        loader.add_value('publish_date', self.date_p)
+        loader.add_value('company', 'Maruti_Suzuki')
+        yield loader.load_item()
 

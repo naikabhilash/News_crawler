@@ -1,7 +1,10 @@
 # -*- coding: utf-8 -*-
 import scrapy
+from numpy import unicode
+
 from ..items import CompanyWebsitesItem
 from scrapy.loader import  ItemLoader
+
 
 class ItcLimitedNewsSpider(scrapy.Spider):
     name = 'itc_limited_news'
@@ -30,13 +33,10 @@ class ItcLimitedNewsSpider(scrapy.Spider):
         itc_limited_items = response.meta['itc_limited_items']
         loader = ItemLoader(item= itc_limited_items,response=response)
 
-        sel_list = response.xpath('//div[@class="press-list-det"]//text()')
-        self.string = ""
-        for i in range(0,len(sel_list)):
-            text = sel_list[i].get()
-            self.string += text + " "
+        sel_list = ' '.join(map(unicode.strip,response.xpath('*//div[@class="press-list-det"]//text()').extract())).replace('\xa0','').replace(',','')
+        # Response for the article text comes in a list which is needed to be joined so that a paragraph can be formed
 
-        loader.add_value('text',self.string)
+        loader.add_value('text',sel_list)
 
         yield loader.load_item()
 
@@ -69,12 +69,12 @@ class ItcLimitedNewsSpider_Two(scrapy.Spider):
         itc_limited_items = response.meta['itc_limited_items']
         loader = ItemLoader(item=itc_limited_items, response=response)
 
-        sel_list = response.xpath('//div[@class="press-list-det"]//text()')
+        sel_list = (response.xpath('//div[@class="press-list-det"]//text()'))
         self.string = ""
         for i in range(0, len(sel_list)):
             text = sel_list[i].get()
             self.string += text + " "
 
-        loader.add_value('text', self.string)
+        loader.add_value('text', sel_list)
 
         yield loader.load_item()
