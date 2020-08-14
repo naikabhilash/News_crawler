@@ -1,3 +1,6 @@
+#---------CHECK WHETHER AN URL LEADS TO ANY HTML or PDF------------------
+
+
 # import requests
 #
 # r = requests.get('https://www.itcportal.com/ReturnViewImage.aspx?fileid=1478')
